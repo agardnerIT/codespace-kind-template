@@ -1,0 +1,71 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/kubernetes-helm
+{
+	"name": "Kubernetes-in-Codespaces",
+	//"name": "Kubernetes - Local Configuration",
+	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+	// Boot into a prebuilt docker container:
+	//"image": "mcr.microsoft.com/devcontainers/base:bullseye",
+	// Or build on demand using a Dockerfile
+	"dockerFile": "Dockerfile",
+
+	// do not change these if you want Docker in Docker support
+	"runArgs": ["--init", "--privileged", "--network=host"],
+	"mounts": [ "source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind" ],
+	"overrideCommand": false,
+
+	// some base images require a specific user name
+	"remoteUser": "vscode",
+
+	// Install extensions
+	"customizations": {
+		"vscode": {	
+			// Set container specific settings
+			"settings": {
+				"terminal.integrated.defaultProfile.linux": "zsh"
+			},			
+			"extensions": [
+				"ms-azuretools.vscode-docker",
+				"ms-kubernetes-tools.vscode-kubernetes-tools"
+			]
+		}
+	},
+
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	"forwardPorts": [
+		80,
+		8080
+	],
+
+	// add visual labels that appear in the VSCode "Ports" tab
+	"portsAttributes": {
+		"80": { "label": "HTTP interface" },
+		"8080": { "label": "Perhaps my app running on :8080?"}
+	},
+
+	// Suggest a minumum codespace size to users
+	// See: https://docs.github.com/en/codespaces/overview
+	"hostRequirements": {
+		"cpus": 2
+	},
+
+	// (optional) Use 'postCreateCommand' to run commands after the container is created.
+	// Fires once when a container is created
+	"postCreateCommand": ".devcontainer/post-create.sh",
+
+	// (optional) Use 'postStartCommand' to run commands after the container starts.
+	// Fires potentially multiple times when a container is started
+	// GitHub will stop your environment if you (for example) go for lunch
+	// So use this to "restart" things if required.
+    "postStartCommand": ".devcontainer/post-start.sh",
+
+	// Add recommended secrets
+	// These are encrypted, stored in GitHub and made available as env vars
+	// eg. echo $FOO
+	// printenv to see all.
+	"secrets": {
+	 	  "FOO": {
+	 		"description": "Some descriptive text to help the user fill out the form"
+		}
+	}
+}
